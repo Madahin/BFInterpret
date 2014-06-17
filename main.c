@@ -1,7 +1,7 @@
 /**
  * \file main.c
  * \brief Brain Fuck Interpreter.
- * \author Nicolas Fleurot
+ * \author Nicolas Fleurot & Hassan El Azzouzi
  * \version 0.0.5
  * \date 17/06/2014
  *
@@ -30,7 +30,7 @@
 #define VERSION_WIP 5
 #define STABLE 1
 
-#define AUTHOR "Nicolas Fleurot"
+#define AUTHOR "Hassan El Azzouzi & Nicolas Fleurot"
 
 void Parse(const char* a_sInput);
 void IBF(void);
@@ -151,6 +151,7 @@ void Parse(const char* a_sInput)
             }
             case TOKEN_WB:
             {
+				//TODO [-] ne fonctionne pas
                 if(t_Buffer[t_iPosIndex] == 0){
                     t_iNbCondition += 1;
                     while(t_iNbCondition > 0){
@@ -193,6 +194,8 @@ void Parse(const char* a_sInput)
 void IBF(void)
 {
     char* brainCode=(char *)calloc((size_t)SIZE_BUFF,sizeof(char));
+	if(brainCode==NULL)
+		perror("calloc");
     int tmpFree=0;
     do{
         printf(">>");
