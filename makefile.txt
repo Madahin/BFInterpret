@@ -1,0 +1,11 @@
+CC=gcc
+CFLAGS=-O2 -Wall -Wextra
+
+ibf : main.o
+	$(CC) -o ibf main.o
+	
+main.o : main.c
+	$(CC) $(CFLAGS) -c main.c
+	
+clean :
+	rm ibf main.o
