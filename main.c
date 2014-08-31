@@ -2,8 +2,8 @@
  * \file main.c
  * \brief Brain Fuck Interpreter.
  * \author Nicolas Fleurot & Hassan El Azzouzi
- * \version 0.0.5
- * \date 17/06/2014
+ * \version 0.0.6
+ * \date 31/08/2014
  *
  * A simple Brain Fuck Interpreter in C.
  *
@@ -27,7 +27,7 @@
 
 #define VERSION_FINAL 0
 #define VERSION_SUB 0
-#define VERSION_WIP 5
+#define VERSION_WIP 6
 #define STABLE 1
 
 #define AUTHOR "Hassan El Azzouzi & Nicolas Fleurot"
@@ -97,14 +97,12 @@ void Parse(const char* a_sInput)
     int t_iPosIndex = 0;
     int t_iFactor = 1;
     unsigned int* t_Buffer = (unsigned int*)calloc(SIZE_BUFF, sizeof(unsigned int));
-	if(t_Buffer==NULL)
-		perror("calloc");
-    int t_iNbCondition = 0;
-    int t_iPosCondition[50] = { 0 };
-    int t_iIndexCondition = -1;
+    if(t_Buffer==NULL)
+        perror("calloc");
     while(a_sInput[t_iIndex] != '\0')
     {
-        switch (a_sInput[t_iIndex])
+        char t_Token = a_sInput[t_iIndex];
+        switch (t_Token)
         {
             case TOKEN_PLUS:
             {
@@ -123,8 +121,8 @@ void Parse(const char* a_sInput)
                     t_iFactor += 1;
                     unsigned int* t_NewBuffer = (unsigned int *)calloc(t_iFactor * SIZE_BUFF, sizeof(unsigned int));
 
-					if(t_NewBuffer==NULL)
-						perror("calloc");
+                    if(t_NewBuffer==NULL)
+                        perror("calloc");
                     i=0;
                     for(i=0 ; i < ((t_iFactor - 1) * SIZE_BUFF) ; i++){
                         t_NewBuffer[i] = t_Buffer[i];
@@ -151,28 +149,31 @@ void Parse(const char* a_sInput)
             }
             case TOKEN_WB:
             {
-				//TODO [-] ne fonctionne pas
                 if(t_Buffer[t_iPosIndex] == 0){
-                    t_iNbCondition += 1;
-                    while(t_iNbCondition > 0){
+                    int t_iLevel = 1;
+                    while(t_iLevel != 0){
                         t_iIndex += 1;
                         if(a_sInput[t_iIndex] == '['){
-                            t_iNbCondition += 1;
+                            t_iLevel += 1;
                         }else if(a_sInput[t_iIndex] == ']'){
-                            t_iNbCondition -= 1;
+                            t_iLevel -= 1;
                         }
                     }
-                }else{
-                    t_iIndexCondition += 1;
-                    t_iPosCondition[t_iIndexCondition] = t_iIndex;
                 }
                 break;
             }
             case TOKEN_WE:
             {
-                if(t_Buffer[t_iPosIndex] > 0){
-                    t_iIndex = (t_iPosCondition[t_iIndexCondition] - 1);
-                    t_iIndexCondition -= 1;
+                if(t_Buffer[t_iPosIndex] != 0){
+                    int t_iLevel = 1;
+                    while(t_iLevel != 0){
+                        t_iIndex -= 1;
+                        if(a_sInput[t_iIndex] == '['){
+                            t_iLevel -= 1;
+                        }else if(a_sInput[t_iIndex] == ']'){
+                            t_iLevel += 1;
+                        }
+                    }
                 }
                 break;
             }
@@ -194,8 +195,8 @@ void Parse(const char* a_sInput)
 void IBF(void)
 {
     char* brainCode=(char *)calloc((size_t)SIZE_BUFF,sizeof(char));
-	if(brainCode==NULL)
-		perror("calloc");
+    if(brainCode==NULL)
+        perror("calloc");
     int tmpFree=0;
     do{
         printf(">>");
@@ -221,12 +222,12 @@ getVersion();
 */
 void getVersion(void)
 {
-	puts("\t\t ___  ________  ________ ");
-	puts("\t\t|\\  \\|\\   __  \\|\\  _____\\");
-	puts("\t\t\\ \\  \\ \\  \\|\\ /\\ \\  \\__/");
-	puts("\t\t\\ \\  \\ \\   __  \\ \\   __\\");
-	puts("\t\t\\ \\  \\ \\  \\|\\  \\ \\  \\_|");
-	puts("\t\t\\ \\__\\ \\_______\\ \\__\\");
+    puts("\t\t ___  ________  ________ ");
+    puts("\t\t|\\  \\|\\   __  \\|\\  _____\\");
+    puts("\t\t\\ \\  \\ \\  \\|\\ /\\ \\  \\__/");
+    puts("\t\t\\ \\  \\ \\   __  \\ \\   __\\");
+    puts("\t\t\\ \\  \\ \\  \\|\\  \\ \\  \\_|");
+    puts("\t\t\\ \\__\\ \\_______\\ \\__\\");
     puts("\t\t\\|__|\\|_______|\\|__|");
     printf("IBrainFuck version %s %d.%d.%d by %s %s\n",(STABLE)? "STABLE" : "NOT STABLE",
                                                         VERSION_FINAL,VERSION_SUB,VERSION_WIP,AUTHOR,__DATE__);
