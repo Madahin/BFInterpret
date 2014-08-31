@@ -22,7 +22,7 @@ cmake ..
 ##Usage
 You can interpret a string by typing :
 ```
-ibf -r "you're BF code"
+ibf -r "your BF code"
 ```
 You can also launch the interpreteur in interactive mode by typing :
 ```
